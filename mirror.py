@@ -30,7 +30,7 @@ def a_MirrorImg(img_path, img_write_path):
 
 
 # 翻转注释
-def h_MirrorAnno(anno_path, anno_write_path):
+def h_MirrorAnno(anno_path, anno_write_path, num_of_point):
     with open(anno_path, 'r', encoding='utf8') as js:
         data = json.load(js)
         js.close()
@@ -48,19 +48,19 @@ def h_MirrorAnno(anno_path, anno_write_path):
 
     bbox[0][0] = int(x2)
     bbox[1][0] = int(x1)
+    if num_of_point > 0:
+        for i in range(num_of_point):
+            point_x = data['shapes'][i + 1]['points'][0][0]
+            point_x = w - point_x + 1
+            assert point_x > 0
+            data['shapes'][i + 1]['points'][0][0] = point_x
 
-    for i in range(8):
-        point_x = data['shapes'][i + 1]['points'][0][0]
-        point_x = w - point_x + 1
-        assert point_x > 0
-        data['shapes'][i + 1]['points'][0][0] = point_x
-        
     with open(anno_write_path, "w") as f:
         json.dump(data, f)
         f.close()
 
 
-def v_MirrorAnno(anno_path, anno_write_path):
+def v_MirrorAnno(anno_path, anno_write_path, num_of_point):
     with open(anno_path, 'r', encoding='utf8') as js:
         data = json.load(js)
         js.close()
@@ -78,19 +78,19 @@ def v_MirrorAnno(anno_path, anno_write_path):
     bbox[0][1] = int(y2)
     bbox[1][1] = int(y1)
 
-    for i in range(8):
-        point_y = data['shapes'][i + 1]['points'][0][1]
-        point_y = h - point_y + 1
-        assert point_y > 0
-        data['shapes'][i + 1]['points'][0][1] = point_y
-
+    if num_of_point > 0:
+        for i in range(num_of_point):
+            point_y = data['shapes'][i + 1]['points'][0][1]
+            point_y = h - point_y + 1
+            assert point_y > 0
+            data['shapes'][i + 1]['points'][0][1] = point_y
 
     with open(anno_write_path, "w") as f:
         json.dump(data, f)
         f.close()
 
 
-def a_MirrorAnno(anno_path, anno_write_path):
+def a_MirrorAnno(anno_path, anno_write_path, num_of_point):
     with open(anno_path, 'r', encoding='utf8') as js:
         data = json.load(js)
         js.close()
@@ -119,24 +119,25 @@ def a_MirrorAnno(anno_path, anno_write_path):
     bbox[0][1] = int(y2)
     bbox[1][1] = int(y1)
 
-    for i in range(8):
+    if num_of_point > 0:
 
-        point_x = data['shapes'][i + 1]['points'][0][0]
-        point_x = w - point_x + 1
-        assert point_x > 0
-        data['shapes'][i + 1]['points'][0][0] = point_x
+        for i in range(num_of_point):
+            point_x = data['shapes'][i + 1]['points'][0][0]
+            point_x = w - point_x + 1
+            assert point_x > 0
+            data['shapes'][i + 1]['points'][0][0] = point_x
 
-        point_y = data['shapes'][i + 1]['points'][0][1]
-        point_y = h - point_y + 1
-        assert point_y > 0
-        data['shapes'][i + 1]['points'][0][1] = point_y
+            point_y = data['shapes'][i + 1]['points'][0][1]
+            point_y = h - point_y + 1
+            assert point_y > 0
+            data['shapes'][i + 1]['points'][0][1] = point_y
 
     with open(anno_write_path, "w") as f:
         json.dump(data, f)
         f.close()
 
 
-def mirror(img_dir, anno_dir, img_write_dir, anno_write_dir):
+def mirror(img_dir, anno_dir, img_write_dir, anno_write_dir, num_of_point):
     if not os.path.exists(img_write_dir):
         os.makedirs(img_write_dir)
 
@@ -162,9 +163,9 @@ def mirror(img_dir, anno_dir, img_write_dir, anno_write_dir):
             h_MirrorImg(img_path, h_img_write_path)
             v_MirrorImg(img_path, v_img_write_path)
             a_MirrorImg(img_path, a_img_write_path)
-            h_MirrorAnno(anno_path, h_anno_write_path)
-            v_MirrorAnno(anno_path, v_anno_write_path)
-            a_MirrorAnno(anno_path, a_anno_write_path)
+            h_MirrorAnno(anno_path, h_anno_write_path, num_of_point)
+            v_MirrorAnno(anno_path, v_anno_write_path, num_of_point)
+            a_MirrorAnno(anno_path, a_anno_write_path, num_of_point)
 
 
 if __name__ == '__main__':
@@ -172,6 +173,5 @@ if __name__ == '__main__':
     anno_dir = '.'
     img_write_dir = '.'
     anno_write_dir = '.'
-    mirror(img_dir, anno_dir, img_write_dir, anno_write_dir)
-
-
+    num_of_point = 8
+    mirror(img_dir, anno_dir, img_write_dir, anno_write_dir,num_of_point)

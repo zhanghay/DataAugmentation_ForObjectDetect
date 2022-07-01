@@ -11,8 +11,9 @@ import os
 import json
 import mirror
 if __name__ == '__main__':
-    img = cv.imread('003_v.jpg')
-    with open('003_v.json', 'r', encoding='utf8') as js:
+    file='003_v'
+    img = cv.imread(file+'.jpg')
+    with open(file+'.json', 'r', encoding='utf8') as js:
         data = json.load(js)
         js.close()
     # 横着是imageWidth
